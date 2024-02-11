@@ -276,8 +276,8 @@ router.put("/update-mirsal/:cardno", async (req, res) =>
           declearationno: declearationno,
           color: color,
           enginno: enginno,
-          comments: comments,
-          qrcode: qrcode,
+          comments: comments
+         
         },
       },
       { new: true }
