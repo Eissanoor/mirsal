@@ -13,10 +13,11 @@ const multer = require("multer");
 const auth = require("../middleware/auth");
 const providerRegister = require("../model/providerregister");
 const emailvarify = require("../model/emailotp");
+const mirsal = require("../model/mirsal")
 const { profile } = require("console");
 const cloudinary = require("cloudinary").v2;
 const cors = require("cors");
-
+const qr = require('qr-image');
 var dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 require("../database/db");
@@ -162,7 +163,208 @@ router.post("/Login", async (req, res) =>
     res.status(400).json({ status: 400, message: "invalid email", data: null });
   }
 });
+function generateQRCode(cardno)
+{
+  // Generate QR code with the card number as the content
+  const qr_png = qr.imageSync(cardno, { type: 'png' });
+  // Return the QR code as a base64 encoded string
+  return qr_png.toString('base64');
+}
+router.post("/add-mirsal", async (req, res) =>
+{
+  try {
+    const { cardno, Date, load, vehicltype, enginehp, modelyear,
+      weight, origin, importer_or_owner, chassisno,
+      declearationno, color, enginno, comments, qrcode } = req.body;
 
+    const itemNameexist = await mirsal.findOne({ cardno: cardno });
+    if (!itemNameexist) {
+
+      const qrCode1 = generateQRCode(cardno);
+      const MenuEmp = new mirsal({
+        cardno: cardno,
+        Date: Date,
+        load: load,
+        vehicltype: vehicltype,
+        enginehp: enginehp,
+        modelyear: modelyear,
+        weight: weight,
+        origin: origin,
+        importer_or_owner: importer_or_owner,
+        chassisno: chassisno,
+        declearationno: declearationno,
+        color: color,
+        enginno: enginno,
+        comments: comments,
+        qrcode: qrCode1
+      });
+      const menu = await MenuEmp.save();
+      res.status(201).json({
+        status: 201,
+        message: "card has been Added",
+        data: MenuEmp,
+      });
+    } else {
+      res.status(404).json({
+        status: 404,
+        message: "card already present",
+        data: null,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({
+      status: 400,
+      message: "Required parameter is missing",
+      data: null,
+    });
+  }
+});
+// PUT request to update an existing mirsal entry
+router.put("/update-mirsal/:cardno", async (req, res) =>
+{
+  try {
+    const { cardno } = req.params;
+    const {
+      Date,
+      load,
+      vehicltype,
+      enginehp,
+      modelyear,
+      weight,
+      origin,
+      importer_or_owner,
+      chassisno,
+      declearationno,
+      color,
+      enginno,
+      comments,
+      qrcode,
+    } = req.body;
+
+    const updatedMenuEmp = await mirsal.findOneAndUpdate(
+      { cardno: cardno },
+      {
+        $set: {
+          Date: Date,
+          load: load,
+          vehicltype: vehicltype,
+          enginehp: enginehp,
+          modelyear: modelyear,
+          weight: weight,
+          origin: origin,
+          importer_or_owner: importer_or_owner,
+          chassisno: chassisno,
+          declearationno: declearationno,
+          color: color,
+          enginno: enginno,
+          comments: comments,
+          qrcode: qrcode,
+        },
+      },
+      { new: true }
+    );
+
+    if (updatedMenuEmp) {
+      res.status(200).json({
+        status: 200,
+        message: "Card updated successfully",
+        data: updatedMenuEmp,
+      });
+    } else {
+      res.status(404).json({
+        status: 404,
+        message: "Card not found",
+        data: null,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      status: 400,
+      message: "Error updating card",
+      data: null,
+    });
+  }
+});
+
+// GET request to fetch all mirsal entries
+router.get("/get-mirsal", async (req, res) =>
+{
+  try {
+    const mirsalEntries = await mirsal.find();
+    res.status(200).json({
+      status: 200,
+      message: "Success",
+      data: mirsalEntries,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: 500,
+      message: "Internal server error",
+      data: null,
+    });
+  }
+});
+
+// GET request to fetch a mirsal entry by card number
+router.get("/get-mirsal/:cardno", async (req, res) =>
+{
+  try {
+    const { cardno } = req.params;
+    const mirsalEntry = await mirsal.findOne({ cardno: cardno });
+    if (mirsalEntry) {
+      res.status(200).json({
+        status: 200,
+        message: "Success",
+        data: mirsalEntry,
+      });
+    } else {
+      res.status(404).json({
+        status: 404,
+        message: "Card not found",
+        data: null,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: 500,
+      message: "Internal server error",
+      data: null,
+    });
+  }
+});
+
+// DELETE request to delete a mirsal entry by card number
+router.delete("/delete-mirsal/:cardno", async (req, res) =>
+{
+  try {
+    const { cardno } = req.params;
+    const deletedMenuEmp = await mirsal.findOneAndDelete({ cardno: cardno });
+    if (deletedMenuEmp) {
+      res.status(200).json({
+        status: 200,
+        message: "Card deleted successfully",
+        data: deletedMenuEmp,
+      });
+    } else {
+      res.status(404).json({
+        status: 404,
+        message: "Card not found",
+        data: null,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: 500,
+      message: "Internal server error",
+      data: null,
+    });
+  }
+});
 
 
 
