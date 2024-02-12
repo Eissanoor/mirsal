@@ -48,7 +48,7 @@ router.use("/categoryThumbnail", express.static("public/upload"));
 router.get("/", async (req, res) =>
 {
   try {
-   
+
     res.status(200).json({
       status: 200,
       message: "Success",
@@ -195,9 +195,18 @@ router.post("/add-mirsal", async (req, res) =>
       weight, origin, importer_or_owner, chassisno,
       declearationno, color, enginno, comments, qrcode } = req.body;
 
+    // Check if any required field is an empty string
+    if (!cardno || !importer_or_owner || !color || !vehicltype) {
+      // Respond with a 400 status code and a message indicating missing parameters
+      return res.status(400).json({
+        status: 400,
+        message: "Required parameter is missing or empty",
+        data: null,
+      });
+    }
+
     const itemNameexist = await mirsal.findOne({ cardno: cardno });
     if (!itemNameexist) {
-
       const qrCode1 = generateQRCode(cardno);
       const MenuEmp = new mirsal({
         cardno: cardno,
@@ -238,6 +247,7 @@ router.post("/add-mirsal", async (req, res) =>
     });
   }
 });
+
 // PUT request to update an existing mirsal entry
 router.put("/update-mirsal/:cardno", async (req, res) =>
 {
@@ -277,7 +287,7 @@ router.put("/update-mirsal/:cardno", async (req, res) =>
           color: color,
           enginno: enginno,
           comments: comments
-         
+
         },
       },
       { new: true }
