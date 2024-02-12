@@ -266,8 +266,7 @@ router.put("/update-mirsal/:cardno", async (req, res) =>
       declearationno,
       color,
       enginno,
-      comments,
-      qrcode,
+      comments
     } = req.body;
 
     const updatedMenuEmp = await mirsal.findOneAndUpdate(
