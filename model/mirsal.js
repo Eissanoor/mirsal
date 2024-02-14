@@ -15,6 +15,15 @@ const mirsalschema = new mongoose.Schema(
         color: String,
         enginno: String,
         comments: String,
+        Vehicledrive: String,
+        EngineCapacity: String,
+        PassengerCapacity: String,
+        CarriageCapacity: String,
+        VehicleBrandName: String,
+        SpecificationStandardName: String,
+        VCCGenerationDate: String,
+        DeclarationDate: String,
+        OwnerCode: String,
         qrcode: String
     },
     {

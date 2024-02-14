@@ -193,7 +193,9 @@ router.post("/add-mirsal", async (req, res) =>
   try {
     const { cardno, Date, load, vehicltype, enginehp, modelyear,
       weight, origin, importer_or_owner, chassisno,
-      declearationno, color, enginno, comments, qrcode } = req.body;
+      declearationno, color, enginno, comments, Vehicledrive, EngineCapacity,
+      PassengerCapacity, CarriageCapacity, VehicleBrandName, SpecificationStandardName,
+      VCCGenerationDate, DeclarationDate, OwnerCode } = req.body;
 
     // Check if any required field is an empty string
     if (!cardno || !importer_or_owner || !color || !vehicltype) {
@@ -223,6 +225,15 @@ router.post("/add-mirsal", async (req, res) =>
         color: color,
         enginno: enginno,
         comments: comments,
+        Vehicledrive: Vehicledrive,
+        EngineCapacity: EngineCapacity,
+        PassengerCapacity: PassengerCapacity,
+        CarriageCapacity: CarriageCapacity,
+        VehicleBrandName: VehicleBrandName,
+        SpecificationStandardName: SpecificationStandardName,
+        VCCGenerationDate: VCCGenerationDate,
+        DeclarationDate: DeclarationDate,
+        OwnerCode: OwnerCode,
         qrcode: qrCode1
       });
       const menu = await MenuEmp.save();
@@ -266,7 +277,9 @@ router.put("/update-mirsal/:cardno", async (req, res) =>
       declearationno,
       color,
       enginno,
-      comments
+      comments, Vehicledrive, EngineCapacity,
+      PassengerCapacity, CarriageCapacity, VehicleBrandName, SpecificationStandardName,
+      VCCGenerationDate, DeclarationDate, OwnerCode
     } = req.body;
 
     const updatedMenuEmp = await mirsal.findOneAndUpdate(
@@ -285,7 +298,10 @@ router.put("/update-mirsal/:cardno", async (req, res) =>
           declearationno: declearationno,
           color: color,
           enginno: enginno,
-          comments: comments
+          comments: comments,
+          Vehicledrive, EngineCapacity,
+          PassengerCapacity, CarriageCapacity, VehicleBrandName, SpecificationStandardName,
+          VCCGenerationDate, DeclarationDate, OwnerCode
 
         },
       },
