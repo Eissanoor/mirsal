@@ -181,10 +181,10 @@ router.post("/Login", async (req, res) =>
     res.status(400).json({ status: 400, message: "invalid email", data: null });
   }
 });
-function generateQRCode(cardno)
+function generateQRCode(cardno, size = 10)
 {
   // Generate QR code with the card number as the content
-  const qr_png = qr.imageSync(cardno, { type: 'png' });
+  const qr_png = qr.imageSync(cardno, { type: 'png', ec_level: 'H', parse_url: true, margin: 1, size: size });
   // Return the QR code as a base64 encoded string
   return qr_png.toString('base64');
 }
@@ -209,7 +209,7 @@ router.post("/add-mirsal", async (req, res) =>
 
     const itemNameexist = await mirsal.findOne({ cardno: cardno });
     if (!itemNameexist) {
-      const qrCode1 = generateQRCode(cardno);
+      const qrCode1 = generateQRCode(cardno,20);
       const MenuEmp = new mirsal({
         cardno: cardno,
         Date: Date,
