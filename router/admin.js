@@ -299,9 +299,15 @@ router.put("/update-mirsal/:cardno", async (req, res) =>
           color: color,
           enginno: enginno,
           comments: comments,
-          Vehicledrive, EngineCapacity,
-          PassengerCapacity, CarriageCapacity, VehicleBrandName, SpecificationStandardName,
-          VCCGenerationDate, DeclarationDate, OwnerCode
+          Vehicledrive: Vehicledrive,
+          EngineCapacity: EngineCapacity,
+          PassengerCapacity: PassengerCapacity,
+          CarriageCapacity: CarriageCapacity,
+          VehicleBrandName: VehicleBrandName,
+          SpecificationStandardName: SpecificationStandardName,
+          VCCGenerationDate: VCCGenerationDate,
+          DeclarationDate: DeclarationDate,
+          OwnerCode: OwnerCode
 
         },
       },
