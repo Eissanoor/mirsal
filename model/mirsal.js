@@ -24,6 +24,7 @@ const mirsalschema = new mongoose.Schema(
         VCCGenerationDate: String,
         DeclarationDate: String,
         OwnerCode: String,
+        Vehiclemodel: String,
         qrcode: String
     },
     {
