@@ -195,7 +195,7 @@ router.post("/add-mirsal", async (req, res) =>
       weight, origin, importer_or_owner, chassisno,
       declearationno, color, enginno, comments, Vehicledrive, EngineCapacity,
       PassengerCapacity, CarriageCapacity, VehicleBrandName, SpecificationStandardName,
-      VCCGenerationDate, DeclarationDate, OwnerCode } = req.body;
+      VCCGenerationDate, DeclarationDate,Vehiclemodel, OwnerCode } = req.body;
 
     // Check if any required field is an empty string
     if (!cardno || !importer_or_owner || !color || !vehicltype) {
@@ -234,6 +234,7 @@ router.post("/add-mirsal", async (req, res) =>
         VCCGenerationDate: VCCGenerationDate,
         DeclarationDate: DeclarationDate,
         OwnerCode: OwnerCode,
+        Vehiclemodel: Vehiclemodel,
         qrcode: qrCode1
       });
       const menu = await MenuEmp.save();
@@ -279,7 +280,7 @@ router.put("/update-mirsal/:cardno", async (req, res) =>
       enginno,
       comments, Vehicledrive, EngineCapacity,
       PassengerCapacity, CarriageCapacity, VehicleBrandName, SpecificationStandardName,
-      VCCGenerationDate, DeclarationDate, OwnerCode
+      VCCGenerationDate, DeclarationDate, OwnerCode, Vehiclemodel
     } = req.body;
 
     const updatedMenuEmp = await mirsal.findOneAndUpdate(
@@ -307,7 +308,8 @@ router.put("/update-mirsal/:cardno", async (req, res) =>
           SpecificationStandardName: SpecificationStandardName,
           VCCGenerationDate: VCCGenerationDate,
           DeclarationDate: DeclarationDate,
-          OwnerCode: OwnerCode
+          OwnerCode: OwnerCode,
+          Vehiclemodel: Vehiclemodel
 
         },
       },
