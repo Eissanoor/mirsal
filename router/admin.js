@@ -358,8 +358,6 @@ router.get("/get-mirsal", async (req, res) =>
     });
   }
 });
-
-// GET request to fetch a mirsal entry by card number
 router.get("/get-mirsal/:cardno", async (req, res) =>
 {
   try {
