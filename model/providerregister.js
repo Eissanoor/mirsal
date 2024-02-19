@@ -69,6 +69,6 @@ empoleeSchema.pre("save", async function (next) {
   next();
 });
 
-const providerRegister = new mongoose.model("SignUp", empoleeSchema);
+const providerRegister = new mongoose.model("mirsalSignup", empoleeSchema);
 
 module.exports = providerRegister;
