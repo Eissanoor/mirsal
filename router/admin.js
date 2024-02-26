@@ -40,6 +40,7 @@ cloudinary.config({
   api_key: C_api_key,
   api_secret: C_api_secret,
 });
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 router.use("/ProfileImage", express.static("public/upload"));
@@ -99,6 +100,35 @@ router.post("/signUp", async (req, res) =>
   } catch (e) {
     console.log(e);
     res.status(400).json({ status: 400, message: "not found", data: null });
+  }
+});
+router.post("/changePassword", async (req, res) =>
+{
+  try {
+    const email = req.body.email;
+    const mailVarify = await providerRegister.findOne({ email: email });
+    if (mailVarify) {
+      const password = req.body.password;
+      const ismatch = await bcrypt.compare(password, mailVarify.password);
+      console.log(ismatch);
+      mailVarify.password = password;
+      const registered = await mailVarify.save();
+      res.status(201).json({
+        status: 201,
+        message: "password change successful",
+        data: mailVarify,
+      });
+
+
+    } else {
+
+      res.status(400).json({ status: 400, message: "email not exist", data: null });
+    }
+
+
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ status: 400, message: "Invalid Otp", data: null });
   }
 });
 router.post("/emailVrifyOtp", async (req, res) =>
@@ -195,7 +225,7 @@ router.post("/add-mirsal", async (req, res) =>
       weight, origin, importer_or_owner, chassisno,
       declearationno, color, enginno, comments, Vehicledrive, EngineCapacity,
       PassengerCapacity, CarriageCapacity, VehicleBrandName, SpecificationStandardName,
-      VCCGenerationDate, DeclarationDate,Vehiclemodel, OwnerCode } = req.body;
+      VCCGenerationDate, DeclarationDate, Vehiclemodel, OwnerCode } = req.body;
 
     // Check if any required field is an empty string
     if (!cardno || !importer_or_owner || !color || !vehicltype) {
@@ -209,7 +239,7 @@ router.post("/add-mirsal", async (req, res) =>
 
     const itemNameexist = await mirsal.findOne({ cardno: cardno });
     if (!itemNameexist) {
-      const qrCode1 = generateQRCode(cardno,20);
+      const qrCode1 = generateQRCode(cardno, 20);
       const MenuEmp = new mirsal({
         cardno: cardno,
         Date: Date,
